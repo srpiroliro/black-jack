@@ -1,6 +1,7 @@
 package com.tecnocampus.blackjack.domain;
 
 import com.tecnocampus.blackjack.application.dto.UserDTO;
+import com.tecnocampus.blackjack.utilities.EGameStatus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,16 +26,16 @@ public class User {
     private String id=UUID.randomUUID().toString();
     
     @OneToMany
-    private List<Match> matches = new ArrayList<>();
+    private List<Game> games = new ArrayList<>();
 
     private String email;
     private String username;
     private String password;
     private Calendar creationDate = Calendar.getInstance();
 
-    private double winRate=0;
-    private int activeMatches=0;
+    private int activeGameesCounter=0;
 
+    private double winRate;
 
     public User(UserDTO userDTO) throws Exception {
         username=userDTO.getUsername();
@@ -57,15 +58,39 @@ public class User {
         
         return password;
     }
+    
 
-    public void addMatch(Match match) throws Exception{
-        checkPlayingMatchesAvalability();
+    public void finishGame() throws Exception {
+        if(activeGameesCounter<=0) 
+            throw new Exception("cant finish 0 games");
 
-        matches.add(match);
+        updateWinRate();
+
+        activeGameesCounter--;
     }
-    private void checkPlayingMatchesAvalability() throws Exception {
-        if(activeMatches+1>MAX_PLAYING_MATCHES)
-            throw new Exception("No new matches available. finish old ones.");
+
+    public void addGame(Game game) throws Exception{
+        checkPlayingGameesAvalability();
+        activeGameesCounter++;
+        games.add(game);
+    }
+    private void checkPlayingGameesAvalability() throws Exception {
+        if(activeGameesCounter+1>MAX_PLAYING_MATCHES)
+            throw new Exception("No new gamees available. finish old ones.");
+    }
+
+    private void updateWinRate(){
+        Long wins = games.stream().filter(m-> (m.getStatus() == EGameStatus.WON)).count();
+        Long loses = games.stream().filter(m-> (m.getStatus() == EGameStatus.LOST)).count();
+
+        winRate=wins/loses;
+    }
+
+    public Game getGameById(String gameId) throws Exception {
+        return games.stream()
+                        .filter(m-> m.getId().equals(gameId))
+                        .findFirst()
+                        .get();
     }
 
 }

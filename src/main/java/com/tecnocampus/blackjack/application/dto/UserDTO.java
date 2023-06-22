@@ -17,7 +17,7 @@ public class UserDTO {
     private String creationDate;
 
 
-    public UserDTO(User user) throws Exception {
+    public UserDTO(User user){
         id=user.getId();
         username=user.getUsername();
         email=user.getEmail();

@@ -1,6 +1,6 @@
 package com.tecnocampus.blackjack.utilities;
 
-public enum EMatchType {
+public enum EGameStatus {
     PLAYING,
     STAND,
     WON,
