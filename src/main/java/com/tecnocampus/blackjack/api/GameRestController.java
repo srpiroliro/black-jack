@@ -32,6 +32,11 @@ public class GameRestController {
         return gameController.createGame(userId, gameDTO);
     }
 
+    @PostMapping("/users/{userId}/games/{gameId}")
+    public GameDTO play(@PathVariable String userId, @PathVariable String gameId) throws Exception {
+        return gameController.play(userId, gameId);
+    }
+
     @GetMapping("/users/{userId}/games/{gameId}")
     public GameDTO getGame(@PathVariable String userId, @PathVariable String gameId) throws Exception {
         return gameController.getGameById(gameId);

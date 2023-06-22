@@ -27,7 +27,8 @@ public class GameController {
         User user = userRepository.findById(userId).get();
         Game game = new Game(user);
 
-        user.addGame(game);     
+        user.addGame(game);    
+        gameRepository.save(game);
 
         return new GameDTO(game);
     }
@@ -58,6 +59,7 @@ public class GameController {
     }
     
     public List<GameDTO> getGamesByUserId(String userId){
+        // CHECK: is array filled?
         User user = userRepository.findById(userId).get();
         return user.getGames().stream().map(GameDTO::new).collect(Collectors.toList());
     }

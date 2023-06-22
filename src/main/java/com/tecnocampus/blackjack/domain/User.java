@@ -25,7 +25,7 @@ public class User {
     @Id
     private String id=UUID.randomUUID().toString();
     
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Game> games = new ArrayList<>();
 
     private String email;
